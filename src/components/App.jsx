@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { SearchBar } from "./Searchbar/Searchbar";
-import {ImageGallery} from "./ImageGallery/ImageGallery"
+import { ImageGallery } from "./ImageGallery/ImageGallery"
+import { Container } from "./App.styled";
+
 
 export class App extends Component {
   state = {
@@ -9,16 +11,15 @@ export class App extends Component {
 
   onSubmit = e => {
     this.setState({ inputValue: e })
-    console.log(this.state.inputValue)
   }
 
   render() {
 
     return (
-      <div>
+      <Container>
         <SearchBar onSubmit={this.onSubmit} />
         <ImageGallery value={ this.state.inputValue} />
-      </div>
+      </Container>
     )
   }
 }

@@ -1,19 +1,17 @@
 import React, { Component } from "react";
-
-import { Searchbar, SearchForm, SearchFormButton, SearchFormButtonLabel, SearchFormInput } from './Searchbar.styled'
+import { Searchbar, SearchForm, SearchFormButton, SearchFormButtonLabel, SearchFormInput } from './Searchbar.styled';
 
 export class SearchBar extends Component {
   state = {
     inputValue: '',
   }
   onChange = e => { 
-    this.setState({ inputValue: e.target.value })
-    console.log(this.state.inputValue)
+    this.setState({ inputValue: e.target.value });
   }
   
   onSubmit = e => {
     e.preventDefault();
-    if (this.state.query === '') {
+    if (this.state.inputValue.trim() === '') {
       alert('Please, enter a value.');
       return;
     }
@@ -33,7 +31,7 @@ export class SearchBar extends Component {
 
           <SearchFormInput
             type="text"
-            autocomplete="off"
+            autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
             value={this.state.inputValue}
