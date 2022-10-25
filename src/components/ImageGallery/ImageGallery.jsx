@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { ImageGalleryList } from "./ImageGallery.styled"
 import { GalleryItem } from "../ImageGalleryItem/ImageGalleryItem"
 import { Button } from "../Button/Button"
 import { Spinner } from "../Loader/Loader"
-import {Modal} from "../Modal/Modal"
-
-axios.defaults.baseURL = "https://pixabay.com/api/";
-const KEY = "29676871-837cab832e208c22136e7205d"
+import { Modal } from "../Modal/Modal"
+import {fetchPhotos} from "../api/api"
 
 export class ImageGallery extends Component {
   state = {
@@ -21,61 +18,54 @@ export class ImageGallery extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
+    const prevValue = prevProps.value;
+    const nextValue = this.props.value;
+    const nextPage = this.state.page;
+    const { photos } = this.state;
+      
+    if (prevValue !== nextValue) {
+      this.setState({ page: 1, photos: []})
+    }
 
-      // this.setState({ showLoader: true });
-      if (prevProps.value !== this.props.value) {
-        this.setState({ page: 1, photos: []})
-      }
-      if (prevProps.value === this.props.value & prevState.page === this.state.page) {
-        return console.log('Oooops')
-      }
+    if ((prevValue === nextValue & prevState.page === nextPage) || (
+      prevValue !== nextValue & nextPage !== 1)) {
+      return
+    }
+
     try {
+      this.setState({ showLoader: true });
 
-      console.log(prevState.page)
-      console.log(prevState.photos)
+      const response = await fetchPhotos(nextValue, nextPage);
 
-      const response = await axios.get(``, {
-        params: {
-          q: this.props.value,
-          page: this.state.page,
-          key: `${ KEY }`,
-          image_type: 'photo',
-          orientation: 'horizontal',
-          per_page: 12
-        }
-      })
       this.setState(prevState => {
         return {
-          photos: [...prevState.photos, ...response.data.hits]
+          photos: [...prevState.photos, ...response.data.hits],
+          showLoader: false,
         }
       })
-      console.log(this.state.page)
-            console.log(this.state.photos)
 
-      if (this.state.photos !== [] &
-        response.data.totalHits > (this.state.photos.length + response.data.hits.length)
+      if (photos !== [] &
+        response.data.totalHits > (photos.length + response.data.hits.length)
         ) {
         this.setState({showButton: "show"})
       } else {
         this.setState({showButton: "hidden"})
       }
-
     } catch (error) {
       this.setState({ error });
     }
-    // finally {
-    //   this.setState({ showLoader: false });
-    // }
   }  
 
   changePage = () => {
     this.setState({page: this.state.page +1})
   }
+
   togleModal = () => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
     }))
   }
+
   imgForModal = ({src, alt}) => {
     this.setState({
       imageModal: { src, alt },
@@ -108,7 +98,7 @@ export class ImageGallery extends Component {
         {photos.length !== 0 && <ImageGalleryList>{gallery}</ImageGalleryList>}
         {showButton === "show" && <Button onClick={this.changePage} />}
         {showModal === true && <Modal onClose={this.togleModal}>
-          <img src={imageModal.src} alt={imageModal.alt} width={480}/>
+          <img src={imageModal.src} alt={imageModal.alt} width={960}/>
         </Modal>}
       </>
     )
