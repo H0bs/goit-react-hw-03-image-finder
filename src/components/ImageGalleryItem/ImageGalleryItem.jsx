@@ -1,4 +1,4 @@
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { ImageGalleryItem, ImageGalleryItemImage } from './ImageGalleryItem.styled';
 
 export const GalleryItem = ({src, tags, largeImageURL, onClickModal}) => {
@@ -14,9 +14,9 @@ export const GalleryItem = ({src, tags, largeImageURL, onClickModal}) => {
 }
 
 GalleryItem.propTypes = {
-  id: propTypes.string,
-  src: propTypes.string.isRequired,
-  tags: propTypes.string.isRequired,
-  largeImageURL: propTypes.string.isRequired,
-  onClickModal: propTypes.func.isRequired,
+  id: PropTypes.string,
+  src: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+  onClickModal: PropTypes.func.isRequired,
 }
